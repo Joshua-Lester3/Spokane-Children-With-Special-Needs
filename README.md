@@ -1,1 +1,1 @@
-# Spokane-Children-With-Special-Needs
+# Spokane - Website for children with special healthcare needs :)
