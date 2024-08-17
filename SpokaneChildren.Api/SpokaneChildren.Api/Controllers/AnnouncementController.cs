@@ -18,7 +18,7 @@ public class AnnouncementController : ControllerBase
 	}
 
 	[HttpPost("AddAnnouncement")]
-	public async Task<IActionResult> AddAnnouncement(AnnouncementDto dto)
+	public async Task<IActionResult> PostAnnouncement(AnnouncementDto dto)
 	{
 		if (dto.Title.IsNullOrEmpty())
 		{
