@@ -1,4 +1,5 @@
-﻿using SpokaneChildren.Api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SpokaneChildren.Api.Data;
 using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Models;
 
@@ -7,22 +8,97 @@ namespace SpokaneChildren.Api.Services;
 public class AnnouncementService
 {
 	private readonly AppDbContext _context;
+	private static object _deletingAnnouncementLock = new();
+	private static object _postingAnnouncementLock = new();
 
 	public AnnouncementService(AppDbContext context)
 	{
 		_context = context;
 	}
 
-	public Announcement AddAnnouncement(AnnouncementDto dto)
+	public async Task<Announcement> AddAnnouncement(AnnouncementDto dto)
 	{
-		Announcement addedAnnouncement = new()
+		if (dto.Title is null)
 		{
-			Title = dto.Title,
-			Description = dto.Description,
-			DatePosted = DateTime.UtcNow,
-		};
-		_context.Add(addedAnnouncement);
-		_context.SaveChanges();
-		return addedAnnouncement;
+			throw new ArgumentNullException(nameof(dto.Title));
+		}
+		if (dto.Title.Trim().Length == 0)
+		{
+			throw new ArgumentException($"{nameof(dto.Title)} is not allowed to be empty.");
+		}
+
+		Announcement? foundAnnouncement = null;
+		if (dto.Id != -1)
+		{
+			foundAnnouncement = await _context.Announcements
+				.FirstOrDefaultAsync(announcement => announcement.Id == dto.Id);
+		}
+		if (foundAnnouncement is null)
+		{
+			lock (_postingAnnouncementLock)
+			{
+				if (dto.Id != -1)
+				{
+					foundAnnouncement = _context.Announcements
+						.FirstOrDefault(announcement => announcement.Id == dto.Id);
+				}
+
+				if (foundAnnouncement is null)
+				{
+					Announcement addedAnnouncement = new()
+					{
+						Title = dto.Title,
+						Description = dto.Description,
+						DatePosted = DateTime.UtcNow,
+					};
+					_context.Add(addedAnnouncement);
+					_context.SaveChanges();
+					return addedAnnouncement;
+				}
+				else
+				{
+					foundAnnouncement.Title = dto.Title;
+					foundAnnouncement.Description = dto.Description;
+					_context.SaveChanges();
+					return foundAnnouncement;
+				}
+			}
+		}
+		else
+		{
+			lock (_postingAnnouncementLock)
+			{
+				foundAnnouncement.Title = dto.Title;
+				foundAnnouncement.Description = dto.Description;
+				_context.SaveChanges();
+				return foundAnnouncement;
+			}
+		}
+	}
+
+	public async Task<bool> DeleteAnnouncement(int id)
+	{
+		var foundAnnouncment = await _context.Announcements.FirstOrDefaultAsync(announcement => announcement.Id == id);
+		if (foundAnnouncment is not null)
+		{
+			lock (_deletingAnnouncementLock)
+			{
+				foundAnnouncment = _context.Announcements.FirstOrDefault(announcement => announcement.Id == id);
+				if (foundAnnouncment is not null)
+				{
+					_context.Announcements.Remove(foundAnnouncment);
+					_context.SaveChanges();
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public async Task<List<Announcement>> GetAnnouncementList()
+	{
+		return await _context.Announcements
+			.OrderByDescending(announcement => announcement.DatePosted)
+			.ToListAsync();
 	}
 }
