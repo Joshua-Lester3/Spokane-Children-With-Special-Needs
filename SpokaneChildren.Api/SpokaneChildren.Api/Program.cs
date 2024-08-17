@@ -59,6 +59,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddScoped<AnnouncementService>();
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<ResourceService>();
 
 // Identity Services
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)

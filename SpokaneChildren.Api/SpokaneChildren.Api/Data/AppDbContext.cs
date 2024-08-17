@@ -10,6 +10,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
 	public DbSet<Announcement> Announcements { get; set; }
 	public DbSet<Event> Events { get; set; }
+	public DbSet<Resource> Resources { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{

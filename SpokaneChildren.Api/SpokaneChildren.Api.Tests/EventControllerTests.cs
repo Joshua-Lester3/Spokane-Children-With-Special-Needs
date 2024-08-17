@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpokaneChildren.Api.Tests;
 
@@ -112,7 +107,7 @@ public class EventControllerTests
 		// Arrange
 
 		// Act
-		var response = await _httpClient.PostAsync($"/Event/deleteEvent/-1", null);
+		var response = await _httpClient.PostAsync($"/event/deleteEvent/-1", null);
 
 		// Assert
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
