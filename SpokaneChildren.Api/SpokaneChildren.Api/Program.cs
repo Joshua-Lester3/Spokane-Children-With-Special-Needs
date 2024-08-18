@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SpokaneChildren.Api.Data;
 using SpokaneChildren.Api.Identity;
 using SpokaneChildren.Api.Models;
 using SpokaneChildren.Api.Services;
+using System.Text;
 
 var AllOrigins = "AllOrigins";
 
@@ -65,6 +68,26 @@ builder.Services.AddScoped<ResourceService>();
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
 	.AddRoles<IdentityRole>()
 	.AddEntityFrameworkStores<AppDbContext>(); // Tell identity where to store things
+
+// JWT Token Setup
+JwtConfiguration jwtConfig = builder.Configuration
+	.GetSection("Jwt").Get<JwtConfiguration>() ?? throw new InvalidOperationException("JWT config not specified");
+builder.Services.AddSingleton(jwtConfig);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options =>
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			ValidIssuer = jwtConfig.Issuer,
+			ValidAudience = jwtConfig.Audience,
+
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret))
+		}
+	);
 
 var app = builder.Build();
 

@@ -59,6 +59,7 @@ public class AnnouncementService
 				{
 					foundAnnouncement.Title = dto.Title;
 					foundAnnouncement.Description = dto.Description;
+					foundAnnouncement.DatePosted = DateTime.UtcNow;
 					_context.SaveChanges();
 					return foundAnnouncement;
 				}
@@ -70,6 +71,7 @@ public class AnnouncementService
 			{
 				foundAnnouncement.Title = dto.Title;
 				foundAnnouncement.Description = dto.Description;
+				foundAnnouncement.DatePosted = DateTime.UtcNow;
 				_context.SaveChanges();
 				return foundAnnouncement;
 			}

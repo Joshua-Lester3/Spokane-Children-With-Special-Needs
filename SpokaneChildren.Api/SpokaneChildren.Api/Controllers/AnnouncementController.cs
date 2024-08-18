@@ -20,7 +20,7 @@ public class AnnouncementController : ControllerBase
 	[HttpPost("AddAnnouncement")]
 	public async Task<IActionResult> PostAnnouncement(AnnouncementDto dto)
 	{
-		if (dto.Title.IsNullOrEmpty())
+		if (dto.Title?.Trim().IsNullOrEmpty() ?? true)
 		{
 			return BadRequest("Title cannot be empty or null.");
 		}

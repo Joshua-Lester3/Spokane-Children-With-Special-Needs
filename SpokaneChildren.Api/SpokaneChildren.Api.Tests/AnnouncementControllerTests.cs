@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
 using SpokaneChildren.Api.Dtos;

@@ -102,7 +102,7 @@ public class EventControllerTests
 	}
 
 	[TestMethod]
-	public async Task DeleteEvent_InvalidId_StatusCodeOk()
+	public async Task DeleteEvent_InvalidId_StatusCodeBadRequest()
 	{
 		// Arrange
 

@@ -1,13 +1,7 @@
-﻿using Microsoft.Extensions.Options;
-using SpokaneChildren.Api.Data;
+﻿using SpokaneChildren.Api.Data;
 using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Models;
 using SpokaneChildren.Api.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpokaneChildren.Api.Tests;
 
@@ -25,7 +19,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostResource_NameIsPopulated_Success()
+	public async Task AddResource_NameIsPopulated_Success()
 	{
 		// Arrange
 		var dto = new ResourceDto
@@ -43,12 +37,12 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostResource_NameNull_ThrowsArgumentNullException()
+	public async Task AddResource_NameNull_ThrowsArgumentNullException()
 	{
 		// Arrange
 		var dto = new ResourceDto
 		{
-			Name = null,
+			Name = null!,
 			Category = ResourceCategory.Therapy,
 			Website = "Therapy.org"
 		};
@@ -62,7 +56,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	[TestMethod]
 	[DataRow("")]
 	[DataRow("    ")]
-	public async Task PostResource_EmptyName_ThrowsArgumentException(string name)
+	public async Task AddResource_EmptyName_ThrowsArgumentException(string name)
 	{
 		// Arrange
 		var dto = new ResourceDto
