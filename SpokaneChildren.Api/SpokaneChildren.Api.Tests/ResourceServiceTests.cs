@@ -25,7 +25,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostResource_TitleIsPopulated_Success()
+	public async Task PostResource_NameIsPopulated_Success()
 	{
 		// Arrange
 		var dto = new ResourceDto
@@ -43,7 +43,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostResource_FieldNull_ThrowsArgumentNullException()
+	public async Task PostResource_NameNull_ThrowsArgumentNullException()
 	{
 		// Arrange
 		var dto = new ResourceDto
@@ -62,7 +62,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	[TestMethod]
 	[DataRow("")]
 	[DataRow("    ")]
-	public async Task PostResource_EmptyField_ThrowsArgumentException(string name)
+	public async Task PostResource_EmptyName_ThrowsArgumentException(string name)
 	{
 		// Arrange
 		var dto = new ResourceDto
@@ -77,7 +77,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostResource_NormalConditions_ChangesAreSaved()
+	public async Task PostResource_UpdateAddedResource_ChangesAreSaved()
 	{
 		// Arrange
 		var dto = new ResourceDto
@@ -150,7 +150,7 @@ public class ResourceServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task GetResourceList_NormalConditions_ReturnsListOfResourcesByNewest()
+	public async Task GetResourceList_NormalConditions_ReturnsListOfResourcesByCategory()
 	{
 		// Arrange
 		var resource1 = await AddResource();

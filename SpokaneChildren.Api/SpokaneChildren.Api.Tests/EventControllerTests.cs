@@ -92,7 +92,7 @@ public class EventControllerTests
 	public async Task DeleteEvent_ValidId_StatusCodeOk()
 	{
 		// Arrange
-		var e = (await AddEvent())!;
+		var e = await AddEvent();
 
 		// Act
 		var response = await _httpClient.PostAsync($"/event/deleteEvent/{e.EventId}", null);
@@ -113,7 +113,7 @@ public class EventControllerTests
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
-	private async Task<Event?> AddEvent()
+	private async Task<Event> AddEvent()
 	{
 		// Arrange
 		var dto = new EventDto

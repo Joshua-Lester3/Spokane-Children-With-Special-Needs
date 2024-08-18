@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Services;
 
 namespace SpokaneChildren.Api.Controllers;
@@ -15,5 +17,32 @@ public class ResourceController : ControllerBase
 		_service = service;
 	}
 
+	[HttpPost("AddResource")]
+	public async Task<IActionResult> AddResource(ResourceDto dto)
+	{
+		if (dto.Name?.Trim().IsNullOrEmpty() ?? true)
+		{
+			return BadRequest($"{nameof(dto.Name)} cannot be empty or null.");
+		}
+		var resource = await _service.PostResource(dto);
+		return Ok(resource);
+	}
 
+	[HttpPost("DeleteResource/{id}")]
+	public async Task<IActionResult> DeleteResource([FromRoute] int id)
+	{
+		var result = await _service.DeleteResource(id);
+		if (result)
+		{
+			return Ok();
+		}
+		return BadRequest();
+	}
+
+	[HttpGet("GetResourceList")]
+	public async Task<IActionResult> GetResourceList()
+	{
+		var list = await _service.GetResourceList();
+		return Ok(list);
+	}
 }

@@ -80,7 +80,7 @@ public class AnnouncementControllerTests
 	public async Task DeleteAnnouncement_ValidId_StatusCodeOk()
 	{
 		// Arrange
-		var announcement = (await AddAnnouncement())!;
+		var announcement = await AddAnnouncement();
 
 		// Act
 		var response = await _httpClient.PostAsync($"/announcement/deleteAnnouncement/{announcement.Id}", null);
@@ -101,7 +101,7 @@ public class AnnouncementControllerTests
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
-	private async Task<Announcement?> AddAnnouncement()
+	private async Task<Announcement> AddAnnouncement()
 	{
 		// Arrange
 		AnnouncementDto dto = new()

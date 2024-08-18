@@ -19,7 +19,7 @@ public class EventServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostEvent_TitleIsPopulated_Success()
+	public async Task PostEvent_FieldsArePopulated_Success()
 	{
 		// Arrange
 		var dto = new EventDto
@@ -41,7 +41,7 @@ public class EventServiceTests : DatabaseTestBase
 	[DataRow(null, "Fun event", "East side park")]
 	[DataRow("Test Event :)", null, "East side park")]
 	[DataRow("Test Event :)", "Fun event", null)]
-	public async Task PostEvent_FieldNull_ThrowsArgumentNullException(string eventName, string description, string location)
+	public async Task PostEvent_ARequiredFieldIsNull_ThrowsArgumentNullException(string eventName, string description, string location)
 	{
 		// Arrange
 		var dto = new EventDto
@@ -64,7 +64,7 @@ public class EventServiceTests : DatabaseTestBase
 	[DataRow("", "Fun event", "East side park")]
 	[DataRow("Test Event :)", "", "East side park")]
 	[DataRow("Test Event :)", "Fun event", "")]
-	public async Task PostEvent_EmptyField_ThrowsArgumentException(string eventName, string description, string location)
+	public async Task PostEvent_RequiredFieldIsEmptyOrWhitespace_ThrowsArgumentException(string eventName, string description, string location)
 	{
 		// Arrange
 		var dto = new EventDto
@@ -99,7 +99,7 @@ public class EventServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task PostEvent_NormalConditions_ChangesAreSaved()
+	public async Task PostEvent_UpdatedAddedEvent_ChangesAreSaved()
 	{
 		// Arrange
 		var dto = new EventDto
@@ -167,7 +167,7 @@ public class EventServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task GetEventList_NormalConditions_ReturnsListOfEventsByNewest()
+	public async Task GetEventList_NormalConditions_ReturnsListOfEventsByEarliestDate()
 	{
 		// Arrange
 		var event1 = await AddEvent();
