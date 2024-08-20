@@ -11,9 +11,8 @@
     <ClientOnly>
       <v-navigation-drawer v-model="showNavDrawer" :width="navigationDrawerWidth" disable-resize-watcher temporary>
         <v-list class="text-center">
-          <v-list-item>
-            Hello
-          </v-list-item>
+          <v-list-item @click="router.push('/'); showNavDrawer = false">Home</v-list-item>
+          <v-list-item @click="router.push('/resources'); showNavDrawer = false">Resources</v-list-item>
         </v-list>
       </v-navigation-drawer>
     </ClientOnly>
@@ -27,7 +26,7 @@
           @click="router.push(link.url)">{{ link.text }}
         </v-btn>
         <v-col class="text-center mt-4" cols="12">
-          {{ new Date().getFullYear() }} — <strong>My Blog</strong>
+          {{ new Date().getFullYear() }} — <strong>Title</strong>
         </v-col>
       </v-row>
     </v-footer>
@@ -36,7 +35,10 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify';
+import TokenService from '~/scripts/tokenService';
 
+const tokenService = ref(new TokenService());
+provide('TOKEN', tokenService);
 const display = ref(useDisplay());
 const router = useRouter();
 const showNavDrawer = ref(false);
@@ -63,6 +65,6 @@ const links = [
     text: 'Login',
     url: '/login',
   }
-]
+];
 
 </script>

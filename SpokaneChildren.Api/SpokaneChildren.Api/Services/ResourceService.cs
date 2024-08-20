@@ -104,10 +104,21 @@ public class ResourceService
 
 	// When you have better idea of categories and implementation,
 	// Either have a dto that specifies category or group by category :)
-	public async Task<List<Resource>> GetResourceList()
+	public async Task<List<IGrouping<ResourceCategory?, Resource>>> GetResourceList()
 	{
 		return await _context.Resources
-			.OrderBy(resource => resource.Category)
+			.GroupBy(resource => resource.Category)
 			.ToListAsync();
+		//var result = new List<List<Resource>>();
+		//foreach (var grouping in list)
+		//{
+		//	var groupingList = new List<Resource>();
+		//	foreach (var resource in grouping)
+		//	{
+		//		groupingList.Add(resource);
+		//	}
+		//	result.Add(groupingList);
+		//}
+		//return result;
 	}
 }

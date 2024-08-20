@@ -149,12 +149,13 @@ public class ResourceServiceTests : DatabaseTestBase
 		// Arrange
 		var resource1 = await AddResource();
 		var resource2 = await AddResource(ResourceCategory.Psychiatrist);
-		var expectedOrderedList = new Resource[] { resource1, resource2 };
+		var expectedOrderedList = new Resource[][] { [resource1], [resource2] };
 
 		// Act
 		var resourceList = await _service.GetResourceList();
 
 		// Assert
-		CollectionAssert.AreEqual(expectedOrderedList, resourceList);
+		CollectionAssert.AreEqual(expectedOrderedList[0], resourceList[0].ToList());
+		CollectionAssert.AreEqual(expectedOrderedList[1], resourceList[1].ToList());
 	}
 }

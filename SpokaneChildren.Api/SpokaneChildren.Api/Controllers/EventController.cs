@@ -52,7 +52,7 @@ public class EventController : ControllerBase
 	}
 
 	[HttpGet("GetEventList")]
-	public async Task<IActionResult> GetEventList(int page, int countPerPage = 5)
+	public async Task<IActionResult> GetEventList(int page, int countPerPage = 3)
 	{
 		if (page < 0)
 		{
