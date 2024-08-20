@@ -140,7 +140,7 @@ public class EventControllerTests
 		// Arrange
 
 		// Act
-		var response = await _httpClient.GetAsync("/event/getEventList");
+		var response = await _httpClient.GetAsync("/event/getEventList?page=0");
 		var content = await response.Content.ReadFromJsonAsync<List<Event>>();
 
 		// Assert
@@ -153,9 +153,23 @@ public class EventControllerTests
 		// Arrange
 
 		// Act
-		var response = await _httpClient.GetAsync("/event/getEventList");
+		var response = await _httpClient.GetAsync("/event/getEventList?page=0");
 
 		// Assert
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+	}
+
+	[TestMethod]
+	[DataRow(5, 0)]
+	[DataRow(-1, 5)]
+	public async Task GetEventList_BadArguments_StatusCodeBadRequest(int page, int countPerPage)
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync($"/event/getEventList?page={page}&countPerPage={countPerPage}");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 }

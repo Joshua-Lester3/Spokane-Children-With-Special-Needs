@@ -40,9 +40,17 @@ public class AnnouncementController : ControllerBase
 	}
 
 	[HttpGet("GetAnnouncementList")]
-	public async Task<IActionResult> GetAnnouncementList()
+	public async Task<IActionResult> GetAnnouncementList(int page, int countPerPage = 5)
 	{
-		var list = await _service.GetAnnouncementList();
+		if (page < 0)
+		{
+			return BadRequest("Page cannot be negative.");
+		}
+		if (countPerPage < 1)
+		{
+			return BadRequest("CountPerPage cannot be less than one.");
+		}
+		var list = await _service.GetAnnouncementList(page, countPerPage);
 		return Ok(list);
 	}
 }

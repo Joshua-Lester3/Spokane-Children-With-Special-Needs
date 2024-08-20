@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar :elevation="2">
+    <v-app-bar :elevation="2" @click="showNavDrawer = false">
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click.prevent.stop="showNavDrawer = true" />
       </template>
 
-      <v-app-bar-title>Spokane Children with Special Needs</v-app-bar-title>
+      <v-app-bar-title>Title</v-app-bar-title>
     </v-app-bar>
 
     <ClientOnly>
@@ -21,6 +21,16 @@
     <v-main>
       <NuxtPage />
     </v-main>
+    <v-footer class="bg-grey-lighten-1">
+      <v-row justify="center" no-gutters>
+        <v-btn v-for="link in links" :key="link.text" class="mx-2" color="white" rounded="xl" variant="text"
+          @click="router.push(link.url)">{{ link.text }}
+        </v-btn>
+        <v-col class="text-center mt-4" cols="12">
+          {{ new Date().getFullYear() }} — <strong>My Blog</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
@@ -28,7 +38,7 @@
 import { useDisplay } from 'vuetify';
 
 const display = ref(useDisplay());
-
+const router = useRouter();
 const showNavDrawer = ref(false);
 const navigationDrawerWidth = computed(() => {
   switch (display.value.name) {
@@ -40,5 +50,19 @@ const navigationDrawerWidth = computed(() => {
     case 'xxl': return 300;
   }
 });
+const links = [
+  {
+    text: 'Home',
+    url: '/',
+  },
+  {
+    text: 'About',
+    url: '/about',
+  },
+  {
+    text: 'Login',
+    url: '/login',
+  }
+]
 
 </script>

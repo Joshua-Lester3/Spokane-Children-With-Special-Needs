@@ -123,7 +123,7 @@ public class AnnouncementControllerTests
 		// Arrange
 
 		// Act
-		var response = await _httpClient.GetAsync("/announcement/getAnnouncementList");
+		var response = await _httpClient.GetAsync("/announcement/getAnnouncementList?page=0");
 		var content = await response.Content.ReadFromJsonAsync<List<Announcement>>();
 
 		// Assert
@@ -136,9 +136,23 @@ public class AnnouncementControllerTests
 		// Arrange
 
 		// Act
-		var response = await _httpClient.GetAsync("/announcement/getAnnouncementList");
+		var response = await _httpClient.GetAsync("/announcement/getAnnouncementList?page=0");
 
 		// Assert
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+	}
+
+	[TestMethod]
+	[DataRow(5, 0)]
+	[DataRow(-1, 5)]
+	public async Task GetAnnouncementList_BadArguments_StatusCodeBadRequest(int page, int countPerPage)
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync($"/announcement/getAnnouncementList?page={page}&countPerPage={countPerPage}");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 }

@@ -124,18 +124,53 @@ public class AnnouncementServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task GetAnnouncementList_NormalConditions_ReturnsListOfAnnouncementsByNewest()
+	public async Task GetAnnouncementList_FirstPage_ReturnsPaginatedSortedList()
 	{
 		// Arrange
 		var announcement1 = await AddAnnouncement();
 		var announcement2 = await AddAnnouncement();
 		var announcement3 = await AddAnnouncement();
-		var expectedOrderedList = new Announcement[] { announcement3, announcement2, announcement1 };
+		var announcement4 = await AddAnnouncement();
+		var announcement5 = await AddAnnouncement();
+		var announcement6 = await AddAnnouncement();
+		var expectedOrderedList = new Announcement[] { announcement6, announcement5, announcement4, announcement3, announcement2 };
 
 		// Act
-		var announcementList = await _service.GetAnnouncementList();
+		var announcementList = await _service.GetAnnouncementList(0, 5);
 
 		// Assert
 		CollectionAssert.AreEqual(expectedOrderedList, announcementList);
+	}
+
+	[TestMethod]
+	public async Task GetAnnouncementList_SecondPage_ReturnsPaginatedSortedList()
+	{
+		// Arrange
+		var announcement1 = await AddAnnouncement();
+		var announcement2 = await AddAnnouncement();
+		var announcement3 = await AddAnnouncement();
+		var announcement4 = await AddAnnouncement();
+		var announcement5 = await AddAnnouncement();
+		var announcement6 = await AddAnnouncement();
+		var expectedOrderedList = new Announcement[] { announcement1 };
+
+		// Act
+		var announcementList = await _service.GetAnnouncementList(1, 5);
+
+		// Assert
+		CollectionAssert.AreEqual(expectedOrderedList, announcementList);
+	}
+
+	[TestMethod]
+	[DataRow(5, 0)]
+	[DataRow(-1, 5)]
+	public async Task GetAnnouncementList_InvalidArgument_ReturnsPaginatedSortedList(int page, int countPerPage)
+	{
+		// Arrange
+
+		// Act
+
+		// Assert
+		await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await _service.GetAnnouncementList(page, countPerPage));
 	}
 }

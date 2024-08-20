@@ -97,10 +97,21 @@ public class AnnouncementService
 		return false;
 	}
 
-	public async Task<List<Announcement>> GetAnnouncementList()
+	public async Task<List<Announcement>> GetAnnouncementList(int page, int countPerPage)
 	{
+		if (page < 0)
+		{
+			throw new ArgumentException($"{nameof(page)} cannot be less than 0.");
+		}
+		if (countPerPage < 1)
+		{
+			throw new ArgumentException($"{nameof(countPerPage)} cannot be less than 1.");
+		}
+		int skip = page * countPerPage;
 		return await _context.Announcements
 			.OrderByDescending(announcement => announcement.DatePosted)
+			.Skip(skip)
+			.Take(countPerPage)
 			.ToListAsync();
 	}
 }

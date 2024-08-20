@@ -52,9 +52,17 @@ public class EventController : ControllerBase
 	}
 
 	[HttpGet("GetEventList")]
-	public async Task<IActionResult> GetEventList()
+	public async Task<IActionResult> GetEventList(int page, int countPerPage = 5)
 	{
-		var list = await _service.GetEventList();
+		if (page < 0)
+		{
+			return BadRequest("Page cannot be negative.");
+		}
+		if (countPerPage < 1)
+		{
+			return BadRequest("CountPerPage cannot be less than one.");
+		}
+		var list = await _service.GetEventList(page, countPerPage);
 		return Ok(list);
 	}
 }

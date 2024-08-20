@@ -167,18 +167,53 @@ public class EventServiceTests : DatabaseTestBase
 	}
 
 	[TestMethod]
-	public async Task GetEventList_NormalConditions_ReturnsListOfEventsByEarliestDate()
+	public async Task GetEventList_FirstPage_ReturnsPaginatedSortedList()
 	{
 		// Arrange
 		var event1 = await AddEvent();
 		var event2 = await AddEvent();
 		var event3 = await AddEvent();
-		var expectedOrderedList = new Event[] { event1, event2, event3 };
+		var event4 = await AddEvent();
+		var event5 = await AddEvent();
+		var event6 = await AddEvent();
+		var expectedOrderedList = new Event[] { event1, event2, event3, event4, event5 };
 
 		// Act
-		var eventList = await _service.GetEventList();
+		var eventList = await _service.GetEventList(0, 5);
 
 		// Assert
 		CollectionAssert.AreEqual(expectedOrderedList, eventList);
+	}
+
+	[TestMethod]
+	public async Task GetEventList_SecondPage_ReturnsPaginatedSortedList()
+	{
+		// Arrange
+		var event1 = await AddEvent();
+		var event2 = await AddEvent();
+		var event3 = await AddEvent();
+		var event4 = await AddEvent();
+		var event5 = await AddEvent();
+		var event6 = await AddEvent();
+		var expectedOrderedList = new Event[] { event6 };
+
+		// Act
+		var eventList = await _service.GetEventList(1, 5);
+
+		// Assert
+		CollectionAssert.AreEqual(expectedOrderedList, eventList);
+	}
+
+	[TestMethod]
+	[DataRow(5, 0)]
+	[DataRow(-1, 5)]
+	public async Task GetEventList_InvalidArgument_ReturnsPaginatedSortedList(int page, int countPerPage)
+	{
+		// Arrange
+
+		// Act
+
+		// Assert
+		await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await _service.GetEventList(page, countPerPage));
 	}
 }

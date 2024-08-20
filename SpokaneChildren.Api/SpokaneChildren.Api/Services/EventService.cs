@@ -122,10 +122,21 @@ public class EventService
 		return false;
 	}
 
-	public async Task<List<Event>> GetEventList()
+	public async Task<List<Event>> GetEventList(int page, int countPerPage)
 	{
+		if (page < 0)
+		{
+			throw new ArgumentException($"{nameof(page)} cannot be less than 0.");
+		}
+		if (countPerPage < 1)
+		{
+			throw new ArgumentException($"{nameof(countPerPage)} cannot be less than 1.");
+		}
+		int skip = page * countPerPage;
 		return await _context.Events
 			.OrderBy(e => e.DateTime)
+			.Skip(skip)
+			.Take(countPerPage)
 			.ToListAsync();
 	}
 }
