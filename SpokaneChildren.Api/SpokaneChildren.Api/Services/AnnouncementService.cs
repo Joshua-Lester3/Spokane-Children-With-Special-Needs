@@ -114,4 +114,9 @@ public class AnnouncementService
 			.Take(countPerPage)
 			.ToListAsync();
 	}
+
+	public async Task<Announcement?> GetAnnouncement(int id)
+	{
+		return await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id);
+	}
 }

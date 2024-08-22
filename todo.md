@@ -3,6 +3,7 @@
 now:
 
 - finish CRUD FE for announcements/events/resources
+- bug when
 
 later:
 

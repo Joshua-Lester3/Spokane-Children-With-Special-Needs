@@ -37,8 +37,7 @@
 import { useDisplay } from 'vuetify';
 import TokenService from '~/scripts/tokenService';
 
-const tokenService = ref(new TokenService());
-provide('TOKEN', tokenService);
+const tokenService = new TokenService();
 const display = ref(useDisplay());
 const router = useRouter();
 const showNavDrawer = ref(false);

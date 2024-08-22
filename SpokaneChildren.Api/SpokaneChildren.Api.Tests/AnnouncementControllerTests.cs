@@ -155,4 +155,47 @@ public class AnnouncementControllerTests
 		// Assert
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
+
+	[TestMethod]
+	public async Task GetAnnouncement_ValidId_StatusCodeOk()
+	{
+		// Arrange
+		var announcement = await AddAnnouncement();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/announcement/getAnnouncement?id={announcement.Id}");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+	}
+
+	[TestMethod]
+	public async Task GetAnnouncement_ValidId_Success()
+	{
+		// Arrange
+		var announcement = await AddAnnouncement();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/announcement/getAnnouncement?id={announcement.Id}");
+		var content = await response.Content.ReadFromJsonAsync<Announcement>();
+
+		// Assert
+		Assert.AreEqual(announcement.Id, content?.Id);
+		Assert.AreEqual(announcement.Title, content?.Title);
+		Assert.AreEqual(announcement.Description, content?.Description);
+		Assert.AreEqual(announcement.DatePosted, content?.DatePosted);
+
+	}
+
+	[TestMethod]
+	public async Task GetAnnouncement_InvalidId_StatusCodeBadRequest()
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync("/announcement/getAnnouncement?id=-1");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+	}
 }

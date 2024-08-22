@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col sm="12" md="6">
+      <v-col cols="12" md="6">
         <v-card class="mx-auto" elevation="4">
           <v-sheet color="blue">
             <v-row no-gutters>
@@ -17,7 +17,7 @@
           </v-sheet>
           <v-infinite-scroll mode="manual" @load="loadAnnouncements">
             <template v-for="announcement in announcements" :key="announcement.id">
-              <v-list-item class="my-1">
+              <v-list-item class="my-1" @click="router.push(`/announcementView?id=${announcement.id}`)">
                 <v-list-item-title>
                   {{ announcement.title }}
                 </v-list-item-title>
@@ -27,9 +27,8 @@
                 <template v-slot:append>
                   <p>{{ announcement.description }}</p>
                   <v-list-item-action v-if="isAdmin">
-                    <v-btn icon="mdi-pencil" elevation="0" />
-                    <v-btn icon="mdi-delete" elevation="0"
-                      @click="currentAnnouncement = announcement; announcementDialog = true;" />
+                    <v-btn class="ml-2" icon="mdi-pencil" elevation="0"
+                      @click="router.push(`/announcementView?id=${announcement.id}`)" />
                   </v-list-item-action>
                 </template>
               </v-list-item>
@@ -38,7 +37,7 @@
           </v-infinite-scroll>
         </v-card>
       </v-col>
-      <v-col sm="12" md="6">
+      <v-col cols="12" md="6">
         <v-card class="mx-auto" elevation="4" width="auto">
           <v-sheet color="blue">
             <v-row no-gutters>
@@ -69,8 +68,6 @@
                     <v-col cols="auto" v-if="isAdmin">
                       <v-card-actions>
                         <v-btn icon="mdi-pencil" elevation="0" />
-                        <v-btn icon="mdi-delete" elevation="0" />
-
                       </v-card-actions>
                     </v-col>
                   </v-row>
@@ -82,14 +79,13 @@
       </v-col>
     </v-row>
   </v-container>
-  <delete-announcement-dialog v-model="announcementDialog" :announcement="currentAnnouncement"
-    @accept="deleteAnnouncement" />
 </template>
 
 <script setup lang="ts">
 import Axios from 'axios';
 import TokenService from '~/scripts/tokenService';
 import type Announcement from '~/scripts/announcement';
+import { useDisplay } from 'vuetify';
 
 
 interface Event {
@@ -101,88 +97,63 @@ interface Event {
   link: string | null;
 }
 
-const announcementDialog = ref<boolean>(false);
-const currentAnnouncement = ref<Announcement>(null!); // will be set before announcementDialog is set to true
+const router = useRouter();
 const announcements = ref<Array<Announcement>>([]);
 const announcementPageNumber = ref(0);
 const events = ref<Array<Event>>([]);
 const eventPageNumber = ref(0);
-const tokenService: Ref<TokenService> | undefined = inject('TOKEN');
-const isAdmin = computed(() => tokenService?.value.isAdmin());
+const tokenService = new TokenService();
+const isAdmin = computed(() => tokenService.isAdmin());
 
 onMounted(async () => {
-  const announcementUrl = `announcement/getAnnouncementList?page=${announcementPageNumber.value}`;
-  Axios.get(announcementUrl)
-    .then((response) => {
-      announcements.value = announcements.value.concat(response.data);
-      announcementPageNumber.value = announcementPageNumber.value + 1;
-    }).catch(error => {
-      console.error('Error fetching announcement list: ', error);
-    });
-
-  const eventUrl = `event/getEventList?page=${eventPageNumber.value}`;
-  Axios.get(eventUrl)
-    .then((response) => {
-      events.value = events.value.concat(response.data);
-      eventPageNumber.value = eventPageNumber.value + 1;
-    }).catch(error => {
-      console.error('Error fetching event list: ', error);
-    });
+  await loadAnnouncements({ done: (message: string) => { } });
+  await loadEvents({ done: (message: string) => { } });
 });
 
-function loadAnnouncements({ done }: { done: any }) {
-  const url = `announcement/getAnnouncementList?page=${announcementPageNumber.value}`;
-  Axios.get(url)
-    .then((response) => {
-      announcements.value = announcements.value.concat(response.data);
-      announcementPageNumber.value = announcementPageNumber.value + 1;
-      if (response.data.length > 0) {
-        done('ok');
-      } else {
-        done('empty');
-      }
-    }).catch(error => {
-      console.error('Error fetching announcement list: ', error);
-      done('error');
-    });
-}
-
-function loadEvents({ done }: { done: any }) {
-  const url = `event/getEventList?page=${eventPageNumber.value}`;
-  Axios.get(url)
-    .then((response) => {
-      debugger;
-      events.value = events.value.concat(response.data);
-      eventPageNumber.value = eventPageNumber.value + 1;
-      if (response.data.length > 0) {
-        done('ok');
-      } else {
-        done('empty');
-      }
-    }).catch(error => {
-      console.error('Error fetching event list: ', error);
-      done('error');
-    });
-}
-
-function reloadAnnouncements() {
-  announcements.value = [];
-  let pages = announcementPageNumber.value;
-  announcementPageNumber.value = 0;
-  for (let i = 0; i < pages; i++) {
-    loadAnnouncements({ done: (message: string) => { } });
+async function loadAnnouncements({ done }: { done: any }) {
+  try {
+    const url = `announcement/getAnnouncementList?page=${announcementPageNumber.value}`;
+    const response = await Axios.get(url);
+    announcements.value = announcements.value.concat(response.data);
+    announcementPageNumber.value = announcementPageNumber.value + 1;
+    if (response.data.length > 0) {
+      done('ok');
+    } else {
+      done('empty');
+    }
+  } catch (error) {
+    console.error('Error fetching announcement list: ', error);
+    done('error');
   }
 }
 
-function deleteAnnouncement() {
-  const url = `announcement/deleteAnnouncement/${currentAnnouncement.value.id}`
-  Axios.post(url, null)
-    .then((response) => {
-      reloadAnnouncements();
-    })
-    .catch(error => {
-      console.error('Error deleting announcement: ', error);
-    });
+async function loadEvents({ done }: { done: any }) {
+  try {
+    const url = `event/getEventList?page=${eventPageNumber.value}`;
+    const response = await Axios.get(url);
+    events.value = events.value.concat(response.data);
+    eventPageNumber.value = eventPageNumber.value + 1;
+    if (response.data.length > 0) {
+      done('ok');
+    } else {
+      done('empty');
+    }
+
+  } catch (error) {
+    console.error('Error fetching event list: ', error);
+    done('error');
+  }
 }
+
+// function deleteAnnouncement() {
+//   const url = `announcement/deleteAnnouncement/${announcement.value.id}`
+//   Axios.post(url, null)
+//     .then((response) => {
+//       reloadAnnouncements();
+//     })
+//     .catch(error => {
+//       console.error('Error deleting announcement: ', error);
+//     });
+// }
 
 </script>

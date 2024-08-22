@@ -53,4 +53,15 @@ public class AnnouncementController : ControllerBase
 		var list = await _service.GetAnnouncementList(page, countPerPage);
 		return Ok(list);
 	}
+
+	[HttpGet("GetAnnouncement")]
+	public async Task<IActionResult> GetAnnouncement(int id)
+	{
+		var result = await _service.GetAnnouncement(id);
+		if (result is null)
+		{
+			return BadRequest();
+		}
+		return Ok(result);
+	}
 }

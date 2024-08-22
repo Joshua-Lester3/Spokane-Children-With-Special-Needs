@@ -173,4 +173,29 @@ public class AnnouncementServiceTests : DatabaseTestBase
 		// Assert
 		await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await _service.GetAnnouncementList(page, countPerPage));
 	}
+
+	[TestMethod]
+	public async Task GetAnnouncement_ValidId_Success()
+	{
+		// Arrange
+		var announcement = await AddAnnouncement();
+
+		// Act
+		var result = await _service.GetAnnouncement(announcement.Id);
+
+		// Assert
+		Assert.AreEqual(announcement, result);
+	}
+
+	[TestMethod]
+	public async Task GetAnnouncement_InvalidId_ReturnsNull()
+	{
+		// Arrange
+
+		// Act
+		var result = await _service.GetAnnouncement(-1);
+
+		// Assert
+		Assert.IsNull(result);
+	}
 }
