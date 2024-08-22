@@ -11,13 +11,14 @@
                 </v-card-title>
               </v-col>
               <v-col cols="auto" v-if="isAdmin">
-                <v-btn icon="mdi-plus" color="blue" elevation="0" rounded="0" />
+                <v-btn icon="mdi-plus" color="blue" elevation="0" rounded="0"
+                  @click="router.push('/announcementEdit?id=-1')" />
               </v-col>
             </v-row>
           </v-sheet>
           <v-infinite-scroll mode="manual" @load="loadAnnouncements">
             <template v-for="announcement in announcements" :key="announcement.id">
-              <v-list-item class="my-1" @click="router.push(`/announcementView?id=${announcement.id}`)">
+              <v-list-item class="py-2" @click="router.push(`/announcementView?id=${announcement.id}`)">
                 <v-list-item-title>
                   {{ announcement.title }}
                 </v-list-item-title>
@@ -28,7 +29,7 @@
                   <p>{{ announcement.description }}</p>
                   <v-list-item-action v-if="isAdmin">
                     <v-btn class="ml-2" icon="mdi-pencil" elevation="0"
-                      @click="router.push(`/announcementView?id=${announcement.id}`)" />
+                      @click.stop="router.push(`/announcementEdit?id=${announcement.id}`)" />
                   </v-list-item-action>
                 </template>
               </v-list-item>

@@ -1,4 +1,5 @@
 <template>
+  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/')" />
   <v-container>
     <v-card class="ma-3">
       <v-card-title>
@@ -7,9 +8,9 @@
       <v-card-subtitle>
         {{ announcement?.datePosted }}
       </v-card-subtitle>
-      <p class="ma-4">
+      <div class="ma-4">
         {{ announcementDescriptionText }}
-      </p>
+      </div>
     </v-card>
   </v-container>
 </template>
@@ -18,6 +19,7 @@
 import Axios from 'axios';
 import type Announcement from '~/scripts/announcement';
 
+const router = useRouter();
 let announcementId: number;
 const route = useRoute();
 const announcement = ref<Announcement | undefined>(); // will be set in mounted hook
@@ -25,7 +27,7 @@ const announcementDescriptionText = computed(() => {
   if (announcement.value?.description === null || announcement.value?.description.length === 0) {
     return '(No content.)';
   } else {
-    announcement.value?.description;
+    return announcement.value?.description;
   }
 })
 
