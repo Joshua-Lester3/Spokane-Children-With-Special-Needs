@@ -216,4 +216,29 @@ public class EventServiceTests : DatabaseTestBase
 		// Assert
 		await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await _service.GetEventList(page, countPerPage));
 	}
+
+	[TestMethod]
+	public async Task GetEvent_ValidId_Success()
+	{
+		// Arrange
+		var e = await AddEvent();
+
+		// Act
+		var result = await _service.GetEvent(e.EventId);
+
+		// Assert
+		Assert.AreEqual(e, result);
+	}
+
+	[TestMethod]
+	public async Task GetEvent_InvalidId_ReturnsNull()
+	{
+		// Arrange
+
+		// Act
+		var result = await _service.GetEvent(-1);
+
+		// Assert
+		Assert.IsNull(result);
+	}
 }

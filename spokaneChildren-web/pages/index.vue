@@ -48,14 +48,16 @@
                 </v-card-title>
               </v-col>
               <v-col cols="auto" v-if="isAdmin">
-                <v-btn icon="mdi-plus" color="blue" elevation="0" rounded="0" />
+                <v-btn icon="mdi-plus" color="blue" elevation="0" rounded="0"
+                  @click="router.push('/eventEdit?id=-1')" />
               </v-col>
             </v-row>
           </v-sheet>
           <v-container>
             <v-infinite-scroll mode="manual" @load="loadEvents">
               <template v-for="event in events" :key="event.eventId">
-                <v-card class="mx-2 mb-5" height="175" width="auto" color="blue">
+                <v-card class="mx-2 mb-5" height="175" width="auto" color="blue"
+                  @click="router.push(`/eventView?id=${event.eventId}`)">
                   <v-row no-gutters>
                     <v-col class="me-auto" cols="auto">
                       <v-card-title>
@@ -68,7 +70,8 @@
                     </v-col>
                     <v-col cols="auto" v-if="isAdmin">
                       <v-card-actions>
-                        <v-btn icon="mdi-pencil" elevation="0" />
+                        <v-btn icon="mdi-pencil" elevation="0"
+                          @click.stop="router.push(`/eventEdit?id=${event.eventId}`)" />
                       </v-card-actions>
                     </v-col>
                   </v-row>
@@ -86,17 +89,7 @@
 import Axios from 'axios';
 import TokenService from '~/scripts/tokenService';
 import type Announcement from '~/scripts/announcement';
-import { useDisplay } from 'vuetify';
-
-
-interface Event {
-  eventId: number;
-  eventName: string;
-  description: string;
-  dateTime: string;
-  location: string;
-  link: string | null;
-}
+import type Event from '~/scripts/event';
 
 const router = useRouter();
 const announcements = ref<Array<Announcement>>([]);
@@ -106,10 +99,8 @@ const eventPageNumber = ref(0);
 const tokenService = new TokenService();
 const isAdmin = computed(() => tokenService.isAdmin());
 
-onMounted(async () => {
-  await loadAnnouncements({ done: (message: string) => { } });
-  await loadEvents({ done: (message: string) => { } });
-});
+await loadAnnouncements({ done: (message: string) => { } });
+await loadEvents({ done: (message: string) => { } });
 
 async function loadAnnouncements({ done }: { done: any }) {
   try {
@@ -117,6 +108,11 @@ async function loadAnnouncements({ done }: { done: any }) {
     const response = await Axios.get(url);
     announcements.value = announcements.value.concat(response.data);
     announcementPageNumber.value = announcementPageNumber.value + 1;
+    announcements.value.forEach((element) => {
+      let date = new Date(Date.parse(element.datePosted));
+      date.setHours(date.getHours() - 7);
+      element.datePosted = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    });
     if (response.data.length > 0) {
       done('ok');
     } else {
@@ -134,6 +130,11 @@ async function loadEvents({ done }: { done: any }) {
     const response = await Axios.get(url);
     events.value = events.value.concat(response.data);
     eventPageNumber.value = eventPageNumber.value + 1;
+    events.value.forEach((element) => {
+      let date = new Date(Date.parse(element.dateTime));
+      date.setHours(date.getHours() - 7);
+      element.dateTime = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    });
     if (response.data.length > 0) {
       done('ok');
     } else {
@@ -145,16 +146,4 @@ async function loadEvents({ done }: { done: any }) {
     done('error');
   }
 }
-
-// function deleteAnnouncement() {
-//   const url = `announcement/deleteAnnouncement/${announcement.value.id}`
-//   Axios.post(url, null)
-//     .then((response) => {
-//       reloadAnnouncements();
-//     })
-//     .catch(error => {
-//       console.error('Error deleting announcement: ', error);
-//     });
-// }
-
 </script>

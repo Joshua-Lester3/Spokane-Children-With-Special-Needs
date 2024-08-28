@@ -172,4 +172,49 @@ public class EventControllerTests
 		// Assert
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
+
+	[TestMethod]
+	public async Task GetEvent_ValidId_StatusCodeOk()
+	{
+		// Arrange
+		var e = await AddEvent();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/event/getEvent?id={e.EventId}");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+	}
+
+	[TestMethod]
+	public async Task GetEvent_ValidId_Success()
+	{
+		// Arrange
+		var e = await AddEvent();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/event/getEvent?id={e.EventId}");
+		var content = await response.Content.ReadFromJsonAsync<Event>();
+
+		// Assert
+		Assert.AreEqual(e.EventId, content?.EventId);
+		Assert.AreEqual(e.EventName, content?.EventName);
+		Assert.AreEqual(e.Description, content?.Description);
+		Assert.AreEqual(e.DateTime, content?.DateTime);
+		Assert.AreEqual(e.Location, content?.Location);
+		Assert.AreEqual(e.Link, content?.Link);
+
+	}
+
+	[TestMethod]
+	public async Task GetEvent_InvalidId_StatusCodeBadRequest()
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync("/event/getEvent?id=-1");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+	}
 }

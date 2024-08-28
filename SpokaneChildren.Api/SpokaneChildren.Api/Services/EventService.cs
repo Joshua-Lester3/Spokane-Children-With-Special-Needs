@@ -139,4 +139,9 @@ public class EventService
 			.Take(countPerPage)
 			.ToListAsync();
 	}
+
+	public async Task<Event?> GetEvent(int id)
+	{
+		return await _context.Events.FirstOrDefaultAsync(e => e.EventId == id);
+	}
 }

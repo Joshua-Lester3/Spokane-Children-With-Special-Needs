@@ -8,5 +8,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return navigateTo('/403');
       }
       break;
+    case '/eventEdit':
+      if (!tokenService.isAdmin()) {
+        return navigateTo('/403');
+      }
+      break;
   }
 });

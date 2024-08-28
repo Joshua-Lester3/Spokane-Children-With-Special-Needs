@@ -65,4 +65,15 @@ public class EventController : ControllerBase
 		var list = await _service.GetEventList(page, countPerPage);
 		return Ok(list);
 	}
+
+	[HttpGet("GetEvent")]
+	public async Task<IActionResult> GetEvent(int id)
+	{
+		var result = await _service.GetEvent(id);
+		if (result is null)
+		{
+			return BadRequest();
+		}
+		return Ok(result);
+	}
 }

@@ -139,7 +139,7 @@ public class ResourceControllerTests
 
 		// Act
 		var response = await _httpClient.GetAsync("/resource/getResourceList");
-		var content = await response.Content.ReadFromJsonAsync<List<Resource>>();
+		var content = await response.Content.ReadFromJsonAsync<List<List<Resource>>>();
 
 		// Assert
 		Assert.IsNotNull(content);
