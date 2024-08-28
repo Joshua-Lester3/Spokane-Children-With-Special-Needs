@@ -158,4 +158,29 @@ public class ResourceServiceTests : DatabaseTestBase
 		CollectionAssert.AreEqual(expectedOrderedList[0], resourceList[0].ToList());
 		CollectionAssert.AreEqual(expectedOrderedList[1], resourceList[1].ToList());
 	}
+
+	[TestMethod]
+	public async Task GetResource_ValidId_Success()
+	{
+		// Arrange
+		var e = await AddResource();
+
+		// Act
+		var result = await _service.GetResource(e.ResourceId);
+
+		// Assert
+		Assert.AreEqual(e, result);
+	}
+
+	[TestMethod]
+	public async Task GetResource_InvalidId_ReturnsNull()
+	{
+		// Arrange
+
+		// Act
+		var result = await _service.GetResource(-1);
+
+		// Assert
+		Assert.IsNull(result);
+	}
 }

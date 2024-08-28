@@ -45,4 +45,15 @@ public class ResourceController : ControllerBase
 		var list = await _service.GetResourceList();
 		return Ok(list);
 	}
+
+	[HttpGet("GetResource")]
+	public async Task<IActionResult> GetResource(int id)
+	{
+		var result = await _service.GetResource(id);
+		if (result is null)
+		{
+			return BadRequest();
+		}
+		return Ok(result);
+	}
 }

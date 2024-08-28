@@ -156,4 +156,47 @@ public class ResourceControllerTests
 		// Assert
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 	}
+
+	[TestMethod]
+	public async Task GetResource_ValidId_StatusCodeOk()
+	{
+		// Arrange
+		var resource = await AddResource();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/resource/getResource?id={resource.ResourceId}");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+	}
+
+	[TestMethod]
+	public async Task GetResource_ValidId_Success()
+	{
+		// Arrange
+		var resource = await AddResource();
+
+		// Act
+		var response = await _httpClient.GetAsync($"/resource/getResource?id={resource.ResourceId}");
+		var content = await response.Content.ReadFromJsonAsync<Resource>();
+
+		// Assert
+		Assert.AreEqual(resource.ResourceId, content?.ResourceId);
+		Assert.AreEqual(resource.Name, content?.Name);
+		Assert.AreEqual(resource.Website, content?.Website);
+		Assert.AreEqual(resource.Phone, content?.Phone);
+		Assert.AreEqual(resource.Address, content?.Address);
+	}
+
+	[TestMethod]
+	public async Task GetResource_InvalidId_StatusCodeBadRequest()
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync("/resource/getResource?id=-1");
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+	}
 }

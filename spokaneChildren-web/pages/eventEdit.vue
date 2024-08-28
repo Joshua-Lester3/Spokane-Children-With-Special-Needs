@@ -157,7 +157,7 @@ async function deleteEvent() {
     await Axios.post(url, null);
     router.push('/');
   } catch (error) {
-    console.log('Error posting vent: ', error);
+    console.log('Error deleting event: ', error);
   }
 }
 

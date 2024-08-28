@@ -121,4 +121,9 @@ public class ResourceService
 		}
 		return result;
 	}
+
+	public async Task<Resource?> GetResource(int id)
+	{
+		return await _context.Resources.FirstOrDefaultAsync(resource => resource.ResourceId == id);
+	}
 }
