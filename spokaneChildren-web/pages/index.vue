@@ -106,13 +106,13 @@ async function loadAnnouncements({ done }: { done: any }) {
   try {
     const url = `announcement/getAnnouncementList?page=${announcementPageNumber.value}`;
     const response = await Axios.get(url);
-    announcements.value = announcements.value.concat(response.data);
-    announcementPageNumber.value = announcementPageNumber.value + 1;
-    announcements.value.forEach((element) => {
+    response.data.forEach((element: Announcement) => {
       let date = new Date(Date.parse(element.datePosted));
       date.setHours(date.getHours() - 7);
       element.datePosted = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     });
+    announcements.value = announcements.value.concat(response.data);
+    announcementPageNumber.value = announcementPageNumber.value + 1;
     if (response.data.length > 0) {
       done('ok');
     } else {
@@ -128,13 +128,13 @@ async function loadEvents({ done }: { done: any }) {
   try {
     const url = `event/getEventList?page=${eventPageNumber.value}`;
     const response = await Axios.get(url);
-    events.value = events.value.concat(response.data);
-    eventPageNumber.value = eventPageNumber.value + 1;
-    events.value.forEach((element) => {
+    response.data.forEach((element: Event) => {
       let date = new Date(Date.parse(element.dateTime));
       date.setHours(date.getHours() - 7);
       element.dateTime = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     });
+    events.value = events.value.concat(response.data);
+    eventPageNumber.value = eventPageNumber.value + 1;
     if (response.data.length > 0) {
       done('ok');
     } else {
