@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SpokaneChildren.Api.Dtos;
+using SpokaneChildren.Api.Identity;
 using SpokaneChildren.Api.Services;
 
 namespace SpokaneChildren.Api.Controllers;
@@ -18,6 +20,7 @@ public class EventController : ControllerBase
 	}
 
 	[HttpPost("AddEvent")]
+	[Authorize(Roles = Roles.Admin)]
 	public async Task<IActionResult> AddEvent(EventDto dto)
 	{
 		if (dto.EventName?.Trim().IsNullOrEmpty() ?? true)
@@ -41,6 +44,7 @@ public class EventController : ControllerBase
 	}
 
 	[HttpPost("DeleteEvent/{id}")]
+	[Authorize(Roles = Roles.Admin)]
 	public async Task<IActionResult> DeleteEvent([FromRoute] int id)
 	{
 		var result = await _service.DeleteEvent(id);

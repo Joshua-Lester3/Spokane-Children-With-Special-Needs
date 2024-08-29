@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SpokaneChildren.Api.Dtos;
+using SpokaneChildren.Api.Identity;
 using SpokaneChildren.Api.Services;
 
 namespace SpokaneChildren.Api.Controllers;
@@ -18,6 +20,7 @@ public class AnnouncementController : ControllerBase
 	}
 
 	[HttpPost("AddAnnouncement")]
+	[Authorize(Roles = Roles.Admin)]
 	public async Task<IActionResult> PostAnnouncement(AnnouncementDto dto)
 	{
 		if (dto.Title?.Trim().IsNullOrEmpty() ?? true)
@@ -29,6 +32,7 @@ public class AnnouncementController : ControllerBase
 	}
 
 	[HttpPost("DeleteAnnouncement/{id}")]
+	[Authorize(Roles = Roles.Admin)]
 	public async Task<IActionResult> DeleteAnnouncement([FromRoute] int id)
 	{
 		var result = await _service.DeleteAnnouncement(id);

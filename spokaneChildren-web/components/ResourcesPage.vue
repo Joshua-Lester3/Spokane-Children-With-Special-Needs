@@ -1,5 +1,5 @@
 <template>
-  <v-container class="align-center d-flex justify-center mt-2">
+  <v-container v-if="isAdmin" class="align-center d-flex justify-center mt-2">
     <v-btn @click="router.push('/resourceEdit?id=-1')">Add Resource</v-btn>
   </v-container>
   <v-card class="mx-auto my-2" max-width="400">

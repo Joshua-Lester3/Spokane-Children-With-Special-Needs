@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import Axios from 'axios';
 import type Announcement from '~/scripts/announcement';
+import TokenService from '~/scripts/tokenService';
 
 const router = useRouter();
 let announcementId: number;
@@ -32,6 +33,7 @@ const description = ref<string | null>('');
 const success = ref(false);
 const deleteDialog = ref(false);
 const isCreating = ref(false);
+const tokenService = new TokenService();
 
 onMounted(async () => {
   let stringId = route.query.id as string;
@@ -54,12 +56,15 @@ onMounted(async () => {
 
 async function postAnnouncement() {
   try {
+    const headers = tokenService.generateTokenHeader();
+    success.value = false;
     const url = 'announcement/addAnnouncement';
-    await Axios.post(url, {
+    const response = await Axios.post(url, {
       id: isCreating.value ? -1 : announcementId,
       title: title.value,
       description: description.value,
-    });
+    }, { headers });
+    announcementId = response.data.id;
     success.value = true;
   } catch (error) {
     console.log('Error posting announcement: ', error);
@@ -68,8 +73,9 @@ async function postAnnouncement() {
 
 async function deleteAnnouncement() {
   try {
+    const headers = tokenService.generateTokenHeader();
     const url = `announcement/deleteAnnouncement/${announcementId}`;
-    await Axios.post(url, null);
+    await Axios.post(url, null, { headers });
     router.push('/');
   } catch (error) {
     console.log('Error posting announcement: ', error);

@@ -66,9 +66,11 @@
 import Axios from 'axios';
 import type Event from '~/scripts/event';
 import { useDate } from 'vuetify';
+import TokenService from '~/scripts/tokenService';
 
 
 const router = useRouter();
+const tokenService = new TokenService();
 let eventId: number;
 const route = useRoute();
 const eventName = ref<string>('');
@@ -78,7 +80,6 @@ const link = ref<string | null>('');
 const isCreating = ref(false);
 const deleteDialog = ref(false);
 const success = ref(false);
-const dateAdapter = useDate();
 const date = ref(new Date());
 date.value.setSeconds(0, 0);
 const hoursModel = ref<string>('12');
@@ -136,15 +137,18 @@ onMounted(async () => {
 
 async function postEvent() {
   try {
+    const headers = tokenService.generateTokenHeader();
+    success.value = false;
     const url = 'event/addEvent';
-    await Axios.post(url, {
+    const response = await Axios.post(url, {
       eventId: isCreating.value ? -1 : eventId,
       eventName: eventName.value,
       description: description.value,
       dateTime: date.value.toISOString(),
       location: location.value,
       link: link.value,
-    });
+    }, { headers });
+    eventId = response.data.eventId;
     success.value = true;
   } catch (error) {
     console.log('Error posting event: ', error);
@@ -153,8 +157,9 @@ async function postEvent() {
 
 async function deleteEvent() {
   try {
+    const headers = tokenService.generateTokenHeader();
     const url = `event/deleteEvent/${eventId}`;
-    await Axios.post(url, null);
+    await Axios.post(url, null, { headers });
     router.push('/');
   } catch (error) {
     console.log('Error deleting event: ', error);

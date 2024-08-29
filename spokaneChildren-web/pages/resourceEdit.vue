@@ -1,13 +1,13 @@
 <template>
   <v-alert v-model="success" tile title="Success" type="success" closable>
-    Successfully posted Event!
+    Successfully posted Resource!
   </v-alert>
-  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/')" />
+  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/?page=1')" />
   <v-container>
     <v-card class="mt-3">
       <v-container>
         <v-text-field v-model="name" label="Name" />
-        <v-text-field v-model="website" label="Website" />
+        <v-text-field v-model="website" label="Website" hint="Must start with 'https://'" />
         <v-text-field v-model="phone" label="Phone" />
         <v-text-field v-model="address" label="Address" />
         <v-select v-model="category" label="Category" :items="categories" />
@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import TokenService from '~/scripts/tokenService';
 import Axios from 'axios';
 import { type Resource, ResourceCategory } from '~/scripts/resource';
 
@@ -38,6 +39,7 @@ const category = ref<string>('Therapy');
 const isCreating = ref(false);
 const deleteDialog = ref(false);
 const success = ref(false);
+const tokenService = new TokenService();
 
 onMounted(async () => {
   let stringId = route.query.id as string;
@@ -63,15 +65,18 @@ onMounted(async () => {
 
 async function postResource() {
   try {
+    const headers = tokenService.generateTokenHeader();
+    success.value = false;
     const url = 'resource/addResource';
-    await Axios.post(url, {
+    const response = await Axios.post(url, {
       resourceId: resourceId,
       name: name.value,
       category: stringToCategory(category.value),
       website: website.value,
       phone: phone.value,
       address: address.value,
-    });
+    }, { headers });
+    resourceId = response.data.resourceId;
     success.value = true;
   } catch (error) {
     console.log('Error posting resource: ', error);
@@ -80,9 +85,10 @@ async function postResource() {
 
 async function deleteResource() {
   try {
+    const headers = tokenService.generateTokenHeader();
     const url = `resource/deleteResource/${resourceId}`;
-    await Axios.post(url, null);
-    router.push('/resources');
+    await Axios.post(url, null, { headers });
+    router.push('/?page=1');
   } catch (error) {
     console.log('Error deleting resource: ', error);
   }

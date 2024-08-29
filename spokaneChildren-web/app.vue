@@ -1,23 +1,27 @@
 <template>
   <v-app>
     <v-app-bar :elevation="2" @click="showNavDrawer = false">
-      <template v-slot:prepend>
+      <!-- Removing nav drawer for now to see if tabs will work well :) -->
+      <!-- <template v-slot:prepend>
         <v-app-bar-nav-icon @click.prevent.stop="showNavDrawer = true" />
-      </template>
+      </template> -->
 
       <v-app-bar-title>Title</v-app-bar-title>
     </v-app-bar>
-
-    <ClientOnly>
+    <!-- <ClientOnly>
       <v-navigation-drawer v-model="showNavDrawer" :width="navigationDrawerWidth" disable-resize-watcher temporary>
         <v-list class="text-center">
           <v-list-item @click="router.push('/'); showNavDrawer = false">Home</v-list-item>
           <v-list-item @click="router.push('/resources'); showNavDrawer = false">Resources</v-list-item>
         </v-list>
       </v-navigation-drawer>
-    </ClientOnly>
+    </ClientOnly> -->
 
     <v-main>
+      <!-- <v-tabs v-model="tab" align-tabs="start" color="blue">
+        <v-tab @click="router.push('/')">Home</v-tab>
+        <v-tab @click="router.push('/resources')">Resources</v-tab>
+      </v-tabs> -->
       <NuxtPage />
     </v-main>
     <v-footer class="bg-grey-lighten-1">
@@ -37,6 +41,7 @@
 import { useDisplay } from 'vuetify';
 
 const display = ref(useDisplay());
+const tab = ref(0);
 const router = useRouter();
 const showNavDrawer = ref(false);
 const navigationDrawerWidth = computed(() => {
