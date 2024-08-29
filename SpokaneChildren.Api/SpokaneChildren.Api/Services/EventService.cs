@@ -134,6 +134,7 @@ public class EventService
 		}
 		int skip = page * countPerPage;
 		return await _context.Events
+			.Where(e => e.DateTime >= DateTime.UtcNow)
 			.OrderBy(e => e.DateTime)
 			.Skip(skip)
 			.Take(countPerPage)

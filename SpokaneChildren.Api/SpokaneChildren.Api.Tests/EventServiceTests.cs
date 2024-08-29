@@ -154,13 +154,13 @@ public class EventServiceTests : DatabaseTestBase
 		Assert.IsFalse(response);
 	}
 
-	private async Task<Event> AddEvent()
+	private async Task<Event> AddEvent(int hoursOffset = 0)
 	{
 		var dto = new EventDto
 		{
 			EventName = "Test Event :)",
 			Description = "Fun event",
-			DateTime = DateTime.UtcNow,
+			DateTime = DateTime.UtcNow.AddHours(hoursOffset),
 			Location = "East side park",
 		};
 		return await _service.PostEvent(dto);
@@ -170,13 +170,16 @@ public class EventServiceTests : DatabaseTestBase
 	public async Task GetEventList_FirstPage_ReturnsPaginatedSortedList()
 	{
 		// Arrange
-		var event1 = await AddEvent();
-		var event2 = await AddEvent();
+		var event1 = await AddEvent(1);
+		var event2 = await AddEvent(1);
 		var event3 = await AddEvent();
-		var event4 = await AddEvent();
+		var event4 = await AddEvent(1);
 		var event5 = await AddEvent();
-		var event6 = await AddEvent();
-		var expectedOrderedList = new Event[] { event1, event2, event3, event4, event5 };
+		var event6 = await AddEvent(1);
+		var event7 = await AddEvent(1);
+		var event8 = await AddEvent();
+		var event9 = await AddEvent(1);
+		var expectedOrderedList = new Event[] { event1, event2, event4, event6, event7 };
 
 		// Act
 		var eventList = await _service.GetEventList(0, 5);
@@ -189,13 +192,16 @@ public class EventServiceTests : DatabaseTestBase
 	public async Task GetEventList_SecondPage_ReturnsPaginatedSortedList()
 	{
 		// Arrange
-		var event1 = await AddEvent();
-		var event2 = await AddEvent();
+		var event1 = await AddEvent(1);
+		var event2 = await AddEvent(1);
 		var event3 = await AddEvent();
-		var event4 = await AddEvent();
+		var event4 = await AddEvent(1);
 		var event5 = await AddEvent();
-		var event6 = await AddEvent();
-		var expectedOrderedList = new Event[] { event6 };
+		var event6 = await AddEvent(1);
+		var event7 = await AddEvent(1);
+		var event8 = await AddEvent();
+		var event9 = await AddEvent(1);
+		var expectedOrderedList = new Event[] { event9 };
 
 		// Act
 		var eventList = await _service.GetEventList(1, 5);
