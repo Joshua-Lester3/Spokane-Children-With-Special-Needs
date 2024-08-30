@@ -17,7 +17,7 @@ public class AnnouncementControllerTests
 	[TestInitialize]
 	public void Init()
 	{
-		_httpClient = _factory.CreateClient();
+		_httpClient = TestClient.GetTestClient();
 	}
 
 	[TestMethod]

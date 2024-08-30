@@ -15,7 +15,7 @@ public class EventControllerTests
 	[TestInitialize]
 	public void Init()
 	{
-		_httpClient = _factory.CreateClient();
+		_httpClient = TestClient.GetTestClient();
 	}
 
 	[TestMethod]
