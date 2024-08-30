@@ -100,7 +100,7 @@ const tokenService = new TokenService();
 const isAdmin = computed(() => tokenService.isAdmin());
 
 await loadAnnouncements({ done: (message: string) => { } });
-await loadFutureEvents();
+await loadEvents({ done: (message: string) => { } });
 
 async function loadAnnouncements({ done }: { done: any }) {
   try {
@@ -144,23 +144,6 @@ async function loadEvents({ done }: { done: any }) {
   } catch (error) {
     console.error('Error fetching event list: ', error);
     done('error');
-  }
-}
-
-async function loadFutureEvents() {
-  let now = new Date();
-  while (events.value.length < 1) {
-    await loadEvents({ done: (message: string) => { } });
-    if (events.value.length < 1) {
-      break;
-    }
-    for (let index = 0; index < events.value.length; index++) {
-      let eventDate = new Date(Date.parse(events.value[index].dateTime));
-      if (eventDate.valueOf() < now.valueOf()) {
-        events.value.splice(index, 1);
-        index--;
-      }
-    }
   }
 }
 </script>

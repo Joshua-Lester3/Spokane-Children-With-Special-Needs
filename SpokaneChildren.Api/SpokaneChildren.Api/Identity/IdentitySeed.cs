@@ -32,7 +32,6 @@ public class IdentitySeed
 			AppUser user = new AppUser
 			{
 				UserName = "Thors",
-				Email = "thors@vinland.eu",
 			};
 
 			IdentityResult result = userManager.CreateAsync(user, "Passw0rd&321").Result;

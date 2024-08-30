@@ -6,7 +6,7 @@
         <v-app-bar-nav-icon @click.prevent.stop="showNavDrawer = true" />
       </template> -->
 
-      <v-app-bar-title>Title</v-app-bar-title>
+      <v-app-bar-title>Spokane Children With Special Needs</v-app-bar-title>
     </v-app-bar>
     <!-- <ClientOnly>
       <v-navigation-drawer v-model="showNavDrawer" :width="navigationDrawerWidth" disable-resize-watcher temporary>

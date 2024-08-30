@@ -2,8 +2,11 @@
 
 now:
 
-- finish CRUD FE for announcements/events/resources
-- bug when
+-
+- key vault for admin/jwt secret
+- admin endpoints for creating moderators
+- admin FE for creating moderators
+- images from blob storage
 
 later:
 
