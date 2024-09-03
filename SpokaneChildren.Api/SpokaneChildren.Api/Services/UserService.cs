@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SpokaneChildren.Api.Dtos;
+using SpokaneChildren.Api.Identity;
 using SpokaneChildren.Api.Models;
 
 namespace SpokaneChildren.Api.Services;
@@ -27,7 +28,15 @@ public class UserService
 
 			if (result.Succeeded)
 			{
-				return new IdentityResultDto() { Result = IdentityResultEnum.Success };
+				result = await _userManager.AddToRoleAsync(user, Roles.Admin);
+				if (result.Succeeded)
+				{
+					return new IdentityResultDto() { Result = IdentityResultEnum.Success };
+				}
+				else
+				{
+					return new IdentityResultDto { Result = IdentityResultEnum.Failure, Errors = result.Errors };
+				}
 			}
 			else
 			{
@@ -99,10 +108,22 @@ public class UserService
 		return new IdentityResultDto() { Result = IdentityResultEnum.Success };
 	}
 
-	public async Task<AppUser?> GetUser(string id)
+	public async Task<UserInfoDto?> GetUser(string id)
 	{
 		var user = await _userManager.FindByIdAsync(id);
-		return user;
+		if (user is not null)
+		{
+			var roles = await _userManager.GetRolesAsync(user);
+			var dto = new UserInfoDto
+			{
+				UserId = user.Id,
+				UserName = user.UserName,
+				Email = user.Email,
+				Roles = roles.ToArray()
+			};
+			return dto;
+		}
+		return null;
 	}
 }
 

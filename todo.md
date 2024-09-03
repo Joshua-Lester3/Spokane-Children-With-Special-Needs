@@ -3,10 +3,11 @@
 now:
 
 -
-- key vault for admin/jwt secret
 - admin endpoints for creating moderators
-- admin FE for creating moderators
+- admin FE for creating moderators and viewing them
+- key vault for admin/jwt secret
 - images from blob storage
+- static web app/api cloud infrastructure :)
 
 later:
 
