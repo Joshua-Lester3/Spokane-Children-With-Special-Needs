@@ -144,7 +144,7 @@ public class UserServiceTests
 	}
 
 	[TestMethod]
-	public async Task UpdateUserInfo_NameAndEmailDoNotExist_ReturnsFalse()
+	public async Task UpdateUserInfo_UserDoesNotExist_ReturnsFalse()
 	{
 		// Arrange
 		var dto = new UpdateUserInfoDto
@@ -167,7 +167,7 @@ public class UserServiceTests
 	}
 
 	[TestMethod]
-	public async Task ChangePassword_AccountExists_ReturnsTrue()
+	public async Task ChangePassword_AccountExists_Success()
 	{
 		// Arrange
 		var dto = new ChangePasswordDto
@@ -188,6 +188,67 @@ public class UserServiceTests
 
 		// Assert
 		Assert.AreEqual(IdentityResultEnum.Success, result.Result);
+		manager.VerifyAll();
+	}
+
+	[TestMethod]
+	public async Task ChangePassword_AccountDoesNotExist_Failure()
+	{
+		// Arrange
+		var dto = new ChangePasswordDto
+		{
+			Id = "123",
+			CurrentPassword = "ThorfinnIsCool",
+			NewPassword = "NoWarIsCool",
+		};
+		var manager = new Mock<UserManager<AppUser>>(Mock.Of<IUserStore<AppUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+		manager.Setup(x => x.FindByIdAsync(dto.Id))
+			.ReturnsAsync((AppUser?) null);
+		var service = new UserService(manager.Object);
+
+		// Act
+		var result = await service.ChangePassword(dto);
+
+		// Assert
+		Assert.AreEqual(IdentityResultEnum.AccountDoesNotExist, result.Result);
+		manager.VerifyAll();
+	}
+
+	[TestMethod]
+	public async Task DeleteUser_UserExists_Success()
+	{
+		// Arrange
+		var id = "123";
+		var manager = new Mock<UserManager<AppUser>>(Mock.Of<IUserStore<AppUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+		manager.Setup(x => x.FindByIdAsync(id))
+			.ReturnsAsync(new AppUser());
+		manager.Setup(x => x.DeleteAsync(It.IsAny<AppUser>()))
+			.ReturnsAsync(IdentityResult.Success);
+		var service = new UserService(manager.Object);
+
+		// Act
+		var result = await service.DeleteUser(id);
+
+		// Assert
+		Assert.AreEqual(IdentityResultEnum.Success, result.Result);
+		manager.VerifyAll();
+	}
+
+	[TestMethod]
+	public async Task DeleteUser_UserDoesNotExist_Failure()
+	{
+		// Arrange
+		var id = "123";
+		var manager = new Mock<UserManager<AppUser>>(Mock.Of<IUserStore<AppUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+		manager.Setup(x => x.FindByIdAsync(id))
+			.ReturnsAsync((AppUser?)null);
+		var service = new UserService(manager.Object);
+
+		// Act
+		var result = await service.DeleteUser(id);
+
+		// Assert
+		Assert.AreEqual(IdentityResultEnum.AccountDoesNotExist, result.Result);
 		manager.VerifyAll();
 	}
 }

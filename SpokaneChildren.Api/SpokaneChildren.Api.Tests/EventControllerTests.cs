@@ -9,7 +9,6 @@ namespace SpokaneChildren.Api.Tests;
 [TestClass]
 public class EventControllerTests
 {
-	private static readonly WebApplicationFactory<Program> _factory = new();
 	private HttpClient _httpClient = null!; // Will be set in TestInitialize
 
 	[TestInitialize]

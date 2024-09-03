@@ -82,7 +82,21 @@ public class UserService
 			return new IdentityResultDto() { Result = IdentityResultEnum.Failure, Errors = result.Errors };
 		}
 		return new IdentityResultDto() { Result = IdentityResultEnum.Success };
+	}
 
+	public async Task<IdentityResultDto> DeleteUser(string id)
+	{
+		var user = await _userManager.FindByIdAsync(id);
+		if (user is null)
+		{
+			return new IdentityResultDto() { Result = IdentityResultEnum.AccountDoesNotExist };
+		}
+		var result = await _userManager.DeleteAsync(user);
+		if (!result.Succeeded)
+		{
+			return new IdentityResultDto() { Result = IdentityResultEnum.Failure, Errors = result.Errors };
+		}
+		return new IdentityResultDto() { Result = IdentityResultEnum.Success };
 	}
 
 	public async Task<AppUser?> GetUser(string id)
