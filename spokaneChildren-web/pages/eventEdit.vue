@@ -160,7 +160,7 @@ async function deleteEvent() {
     const headers = tokenService.generateTokenHeader();
     const url = `event/deleteEvent/${eventId}`;
     await Axios.post(url, null, { headers });
-    router.push('/');
+    router.push({ path: '/', query: { page: 0 } });
   } catch (error) {
     console.log('Error deleting event: ', error);
   }

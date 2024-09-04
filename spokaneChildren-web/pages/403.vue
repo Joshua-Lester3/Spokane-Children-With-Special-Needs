@@ -17,6 +17,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const goHome = () => {
-  router.push('/');
+  router.push({ path: '/', query: { page: 0 } });
 };
 </script>

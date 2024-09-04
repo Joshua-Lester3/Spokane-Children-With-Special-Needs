@@ -1,9 +1,12 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Models;
 using SpokaneChildren.Api.Services;
+using System.Linq.Expressions;
 
 namespace SpokaneChildren.Api.Tests;
 
@@ -31,7 +34,7 @@ public class UserServiceTests
 
 		// Assert
 		Assert.IsNotNull(result);
-		Assert.AreEqual("123", result.Id);
+		Assert.AreEqual("123", result.UserId);
 	}
 
 	[TestMethod]
@@ -251,4 +254,34 @@ public class UserServiceTests
 		Assert.AreEqual(IdentityResultEnum.AccountDoesNotExist, result.Result);
 		manager.VerifyAll();
 	}
+
+	// TODO: Find way to mock DbSet in order to test GetUserList
+	// https://stackoverflow.com/questions/57314896/iasyncqueryprovider-mock-issue-when-migrated-to-net-core-3-adding-tresult-iasyn/58314109#58314109
+	// https://stackoverflow.com/questions/40476233/how-to-mock-an-async-repository-with-entity-framework-core
+	//[TestMethod]
+	//public async Task GetUserList_Success()
+	//{
+	//	// Arrange
+	//	IEnumerable<AppUser> users = new List<AppUser>()
+	//	{
+	//		new AppUser()
+	//		{
+	//			Id = "123"
+	//		},
+	//		new AppUser()
+	//		{
+	//			Id = "456"
+	//		}
+	//	};
+	//	var manager = new Mock<UserManager<AppUser>>(Mock.Of<IUserStore<AppUser>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+	//	manager.Setup(x => x.Users)
+	//		.Returns();
+	//	var service = new UserService(manager.Object);
+
+	//	// Act
+	//	var result = await service.GetUserList();
+
+	//	// Assert
+	//	Assert.IsNotNull(result);
+	//}
 }

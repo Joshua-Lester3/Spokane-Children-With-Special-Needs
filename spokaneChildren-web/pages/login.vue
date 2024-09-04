@@ -41,7 +41,7 @@ async function submit() {
     .then(async (response) => {
       tokenService.setToken(response.data.token);
       tokenService.setGuid(undefined);
-      router.push('/');
+      router.push({ path: '/', query: { page: 0 } });
     })
     .catch(error => {
       console.error('Error logging in.');

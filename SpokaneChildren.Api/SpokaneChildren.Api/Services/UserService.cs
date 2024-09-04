@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SpokaneChildren.Api.Dtos;
 using SpokaneChildren.Api.Identity;
 using SpokaneChildren.Api.Models;
@@ -124,6 +125,25 @@ public class UserService
 			return dto;
 		}
 		return null;
+	}
+
+	public async Task<List<UserInfoDto>> GetUserList()
+	{
+		var users = await _userManager.Users.ToListAsync();
+		var result = new List<UserInfoDto>();
+		foreach(var user in users)
+		{
+			var roles = await _userManager.GetRolesAsync(user);
+			var dto = new UserInfoDto
+			{
+				UserId = user.Id,
+				UserName = user.UserName,
+				Email = user.Email,
+				Roles = roles.ToArray()
+			};
+			result.Add(dto);
+		}
+		return result;
 	}
 }
 

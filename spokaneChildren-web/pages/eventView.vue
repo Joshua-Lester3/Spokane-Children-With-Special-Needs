@@ -1,5 +1,6 @@
 <template>
-  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/')" />
+  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2"
+    @click="    router.push({ path: '/', query: { page: 0 } })" />
   <v-container>
     <v-card class="ma-3">
       <v-card-title>

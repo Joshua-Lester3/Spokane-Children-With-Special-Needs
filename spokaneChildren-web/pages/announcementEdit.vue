@@ -2,7 +2,7 @@
   <v-alert v-model="success" tile title="Success" type="success" closable>
     Successfully posted Announcement!
   </v-alert>
-  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/')" />
+  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push({ path: '/', query: { page: 0 } })" />
   <v-container>
     <v-card class="ma-3">
       <v-card-title>
@@ -76,7 +76,7 @@ async function deleteAnnouncement() {
     const headers = tokenService.generateTokenHeader();
     const url = `announcement/deleteAnnouncement/${announcementId}`;
     await Axios.post(url, null, { headers });
-    router.push('/');
+    router.push({ path: '/', query: { page: 0 } });
   } catch (error) {
     console.log('Error posting announcement: ', error);
   }

@@ -2,7 +2,8 @@
   <v-alert v-model="success" tile title="Success" type="success" closable>
     Successfully posted Resource!
   </v-alert>
-  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2" @click="router.push('/?page=1')" />
+  <v-btn icon="mdi-chevron-left" elevation="0" class="mt-5 ml-2"
+    @click="    router.push({ path: '/', query: { page: 1 } })" />
   <v-container>
     <v-card class="mt-3">
       <v-container>
@@ -88,7 +89,7 @@ async function deleteResource() {
     const headers = tokenService.generateTokenHeader();
     const url = `resource/deleteResource/${resourceId}`;
     await Axios.post(url, null, { headers });
-    router.push('/?page=1');
+    router.push({ path: '/', query: { page: 1 } });
   } catch (error) {
     console.log('Error deleting resource: ', error);
   }

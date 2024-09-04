@@ -18,5 +18,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return navigateTo('/403');
       }
       break;
+    case '/':
+      if (!tokenService.isAdmin() && to.query.page == '2') {
+        return navigateTo('/403');
+      }
+      break;
   }
 });

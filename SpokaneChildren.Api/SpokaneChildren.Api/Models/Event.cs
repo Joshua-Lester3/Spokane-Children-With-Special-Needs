@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SpokaneChildren.Api.Models;
 
+[Index(nameof(DateTime))]
 public class Event
 {
 	public int EventId { get; set; }

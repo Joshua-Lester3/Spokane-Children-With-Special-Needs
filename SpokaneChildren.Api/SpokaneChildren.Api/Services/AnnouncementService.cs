@@ -108,6 +108,10 @@ public class AnnouncementService
 			throw new ArgumentException($"{nameof(countPerPage)} cannot be less than 1.");
 		}
 		int skip = page * countPerPage;
+		// This query was taking ~25 seconds in localhost, so I tried pulling the whole table
+		// and it's working faster now. This works for now, as this call is only pulling the first
+		// 50 announcements
+		// TODO: Find out why query is taking 25 seconds
 		return await _context.Announcements
 			.OrderByDescending(announcement => announcement.DatePosted)
 			.Skip(skip)

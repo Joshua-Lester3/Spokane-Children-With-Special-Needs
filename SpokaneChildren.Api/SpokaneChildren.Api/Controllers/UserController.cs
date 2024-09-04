@@ -114,4 +114,10 @@ public class UserController : ControllerBase
 		}
 		return BadRequest(result);
 	}
+
+	[HttpGet("GetUserList")]
+	public async Task<List<UserInfoDto>> GetUserList()
+	{
+		return await _service.GetUserList();
+	}
 }

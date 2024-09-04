@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpokaneChildren.Api.Models;
 
+[Index(nameof(DatePosted))]
 public class Announcement
 {
 	public int Id { get; set; }

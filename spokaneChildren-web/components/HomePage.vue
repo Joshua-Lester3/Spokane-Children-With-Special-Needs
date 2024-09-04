@@ -99,8 +99,10 @@ const eventPageNumber = ref(0);
 const tokenService = new TokenService();
 const isAdmin = computed(() => tokenService.isAdmin());
 
-await loadAnnouncements({ done: (message: string) => { } });
-await loadEvents({ done: (message: string) => { } });
+onMounted(async () => {
+  await loadAnnouncements({ done: (message: string) => { } });
+  await loadEvents({ done: (message: string) => { } });
+})
 
 async function loadAnnouncements({ done }: { done: any }) {
   try {

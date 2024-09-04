@@ -260,6 +260,22 @@ public class UserControllerTests
 		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
+	[TestMethod]
+	public async Task GetUserList_Success()
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.GetAsync($"/user/getUserList");
+		var content = await response.Content.ReadFromJsonAsync<List<UserInfoDto>>();
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+		Assert.IsNotNull(content);
+	}
+
+	// TODO: Find solution for testing UserController with non-duplicate emails/usernames
+
 	// I'm not sure I can test with actually adding/deleting/updating a user
 	// because duplicate emails/usernames aren't allowed. So I'm scrapping
 	// these tests, and others involving actually adding/deleting/updating until
