@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <v-app-bar :elevation="2" @click="showNavDrawer = false">
-      <v-app-bar-title class="cursor-pointer" @click="router.push({ path: '/', query: { page: 0 } })">Spokane Children With
+      <v-app-bar-title class="cursor-pointer" @click="router.push({ path: '/', query: { page: 0 } })">Spokane Children
+        With
         Special
         Needs</v-app-bar-title>
     </v-app-bar>
@@ -27,7 +28,7 @@ const showNavDrawer = ref(false);
 const links = [
   {
     text: 'Home',
-    url: '/',
+    url: '/?page=0',
   },
   {
     text: 'About',

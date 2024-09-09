@@ -26,7 +26,6 @@
                   {{ announcement.datePosted }}
                 </v-list-item-subtitle>
                 <template v-slot:append>
-                  <p>{{ announcement.description }}</p>
                   <v-list-item-action v-if="isAdmin">
                     <v-btn class="ml-2" icon="mdi-pencil" elevation="0"
                       @click.stop="router.push(`/announcementEdit?id=${announcement.id}`)" />

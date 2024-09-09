@@ -45,7 +45,9 @@ public class UserService
 			}
 
 		}
-		return new IdentityResultDto { Result = IdentityResultEnum.AccountExists };
+		IdentityError error = new IdentityError();
+		error.Description = "Account with this email or username already exists.";
+		return new IdentityResultDto { Result = IdentityResultEnum.AccountExists, Errors = [ error ] };
 	}
 
 	public async Task<IdentityResultDto> UpdateUserInfo(UpdateUserInfoDto userDto)
@@ -56,6 +58,7 @@ public class UserService
 			return new IdentityResultDto() { Result = IdentityResultEnum.AccountDoesNotExist };
 		}
 		user.UserName = userDto.NewUsername;
+		user.Email = userDto.NewEmail;
 		var result = await _userManager.UpdateAsync(user);
 		if (!result.Succeeded)
 		{
@@ -120,7 +123,7 @@ public class UserService
 				UserId = user.Id,
 				UserName = user.UserName,
 				Email = user.Email,
-				Roles = roles.ToArray()
+				Role = roles.Count() > 0 ? roles[0] : null,
 			};
 			return dto;
 		}
@@ -139,7 +142,7 @@ public class UserService
 				UserId = user.Id,
 				UserName = user.UserName,
 				Email = user.Email,
-				Roles = roles.ToArray()
+				Role = roles.Count() > 0 ? roles[0] : null,
 			};
 			result.Add(dto);
 		}

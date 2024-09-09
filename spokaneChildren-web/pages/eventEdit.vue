@@ -150,6 +150,7 @@ async function postEvent() {
     }, { headers });
     eventId = response.data.eventId;
     success.value = true;
+    window.scrollTo(0, 0);
   } catch (error) {
     console.log('Error posting event: ', error);
   }

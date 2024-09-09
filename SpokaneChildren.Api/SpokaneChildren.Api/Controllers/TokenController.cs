@@ -43,7 +43,7 @@ public class TokenController : ControllerBase
 
 		var user = _context.Users.FirstOrDefault(u => u.UserName == userCredentials.Username);
 
-		if (user is null) { return Unauthorized("The user account was not found"); }
+		if (user is null) { return Unauthorized("The username or password is incorrect"); }
 
 		// Verify the user's password - Microsoft will do this for us. 
 		bool results = await _userManager.CheckPasswordAsync(user, userCredentials.Password);

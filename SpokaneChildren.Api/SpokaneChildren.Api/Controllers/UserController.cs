@@ -120,4 +120,19 @@ public class UserController : ControllerBase
 	{
 		return await _service.GetUserList();
 	}
+
+	[HttpPost("DeleteUser/{id}")]
+	public async Task<IActionResult> DeleteUser([FromRoute] string id)
+	{
+		if (id is null || id.Trim().Length == 0)
+		{
+			return BadRequest("id is required.");
+		}
+		var response = await _service.DeleteUser(id);
+		if (response.Result == IdentityResultEnum.Success)
+		{
+			return Ok();
+		}
+		return BadRequest(response);
+	}
 }

@@ -274,6 +274,19 @@ public class UserControllerTests
 		Assert.IsNotNull(content);
 	}
 
+	[TestMethod]
+	[DataRow("1")]
+	public async Task DeleteUser_InvalidId_BadRequest(string id)
+	{
+		// Arrange
+
+		// Act
+		var response = await _httpClient.PostAsync($"/user/deleteUser/{id}", null);
+
+		// Assert
+		Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+	}
+
 	// TODO: Find solution for testing UserController with non-duplicate emails/usernames
 
 	// I'm not sure I can test with actually adding/deleting/updating a user

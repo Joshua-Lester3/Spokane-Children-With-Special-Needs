@@ -5,4 +5,5 @@ public class UpdateUserInfoDto
 	public required string Id { get; set; }
 	public required string NewUsername { get; set; }
 	public required string NewRole { get; set; }
+	public required string NewEmail { get; set; }
 }

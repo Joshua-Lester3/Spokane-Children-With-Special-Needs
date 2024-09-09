@@ -4,5 +4,6 @@ public class Roles
 {
 	public const string Admin = "Admin";
 	public const string Moderator = "Moderator";
-	public static readonly string[] RolesList = { Admin, Moderator };
+	public const string None = "None";
+	public static readonly string[] RolesList = { Admin, Moderator, None };
 }

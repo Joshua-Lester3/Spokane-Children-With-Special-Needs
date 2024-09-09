@@ -26,6 +26,10 @@ public class IdentitySeed
 		{
 			await roleManager.CreateAsync(new IdentityRole(Roles.Moderator));
 		}
+		if (!await roleManager.RoleExistsAsync(Roles.None))
+		{
+			await roleManager.CreateAsync(new IdentityRole(Roles.None));
+		}
 	}
 
 	private static async Task SeedAdminUserAsync(UserManager<AppUser> userManager)
